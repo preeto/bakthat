@@ -181,7 +181,7 @@ class BakHelper:
     """
     def __init__(self, backup_name, **kwargs):
         self.backup_name = backup_name
-        self.dir_prefix = "{0}_".format(backup_name)
+        self.dir_prefix = "{0}_".format(os.path.basename(backup_name))
         self.destination = kwargs.get("destination", DEFAULT_DESTINATION)
         self.password = kwargs.get("password", "")
         self.profile = kwargs.get("profile", "default")

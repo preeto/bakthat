@@ -529,7 +529,6 @@ def restore(filename, destination=None, profile="default", config=CONFIG_FILE, *
             password = getpass()
 
     log.info("Downloading...")
-
     download_kwargs = {}
     if kwargs.get("job_check"):
         download_kwargs["job_check"] = True
