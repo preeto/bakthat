@@ -212,7 +212,8 @@ def _get_exclude(exclude_file):
 @app.cmd_arg('-k', '--key', type=str, default=None, help="Custom key for periodic backups (works only with BakManager.io hook.)")
 @app.cmd_arg('--exclude-file', type=str, default=None)
 @app.cmd_arg('--s3-reduced-redundancy', action="store_true")
-def backup(filename=os.getcwd(), destination=None, profile="default", config=CONFIG_FILE, prompt="yes", tags=[], key=None, exclude_file=None, s3_reduced_redundancy=False, **kwargs):
+@app.cmd_arg('-m', '--metadata', type=str, help="Additional metadata information you may want stored for files.")
+def backup(filename=os.getcwd(), destination=None, profile="default", config=CONFIG_FILE, prompt="yes", tags=[], key=None, exclude_file=None, s3_reduced_redundancy=False, metadata={}, **kwargs):
     """Perform backup.
 
     :type filename: str
@@ -350,8 +351,16 @@ def backup(filename=os.getcwd(), destination=None, profile="default", config=CON
 
     backup_data["tags"] = tags
 
-    backup_data["metadata"] = dict(is_enc=bakthat_encryption,
-                                   client=socket.gethostname())
+    if metadata:
+        # Append default metadata
+        metadata['is_enc'] = bakthat_encryption
+        metadata['client'] = socket.gethostname()
+
+        backup_data["metadata"] = metadata
+    else:
+        backup_data["metadata"] = dict(is_enc=bakthat_encryption, client=socket.gethostname())
+
+    stored_filename = os.path.join(os.path.dirname(kwargs.get("custom_filename", "")), stored_filename)
     backup_data["stored_filename"] = stored_filename
 
     access_key = storage_backend.conf.get("access_key")

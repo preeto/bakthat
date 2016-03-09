@@ -187,6 +187,7 @@ class BakHelper:
         self.profile = kwargs.get("profile", "default")
         self.conf = kwargs.get("conf", {})
         self.tags = kwargs.get("tags", [])
+        self.metadata = kwargs.get("metadata", {})
         # Key for bakmanager.io hook
         self.key = kwargs.get("key", None)
         self.syncer = None
@@ -268,6 +269,7 @@ class BakHelper:
                               profile=kwargs.get("profile", self.profile),
                               conf=kwargs.get("conf", self.conf),
                               key=kwargs.get("key", self.key),
+                              metadata=kwargs.get("metadata", self.metadata),
                               custom_filename=self.backup_name)
 
     def restore(self, filename, **kwargs):
