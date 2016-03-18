@@ -50,7 +50,7 @@ STORAGE_BACKEND = dict(s3=S3Backend, glacier=GlacierBackend, swift=SwiftBackend)
 def _get_store_backend(conf, destination=None, profile="default"):
     if not isinstance(conf, dict):
         conf = load_config(conf)
-    conf = conf.get(profile)
+    conf = conf.get(profile, conf)
     setup_plugins(conf)
     if not destination:
         destination = conf.get("default_destination", DEFAULT_DESTINATION)
@@ -529,7 +529,6 @@ def restore(filename, destination=None, profile="default", config=CONFIG_FILE, *
             password = getpass()
 
     log.info("Downloading...")
-
     download_kwargs = {}
     if kwargs.get("job_check"):
         download_kwargs["job_check"] = True

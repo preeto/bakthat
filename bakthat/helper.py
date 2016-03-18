@@ -181,7 +181,7 @@ class BakHelper:
     """
     def __init__(self, backup_name, **kwargs):
         self.backup_name = backup_name
-        self.dir_prefix = "{0}_".format(backup_name)
+        self.dir_prefix = "{0}_".format(os.path.basename(backup_name))
         self.destination = kwargs.get("destination", DEFAULT_DESTINATION)
         self.password = kwargs.get("password", "")
         self.profile = kwargs.get("profile", "default")
@@ -267,7 +267,7 @@ class BakHelper:
                               password=kwargs.get("password", self.password),
                               tags=kwargs.get("tags", self.tags),
                               profile=kwargs.get("profile", self.profile),
-                              conf=kwargs.get("conf", self.conf),
+                              config=kwargs.get("conf", self.conf),
                               key=kwargs.get("key", self.key),
                               metadata=kwargs.get("metadata", self.metadata),
                               custom_filename=self.backup_name)
@@ -297,7 +297,7 @@ class BakHelper:
                                destination=kwargs.get("destination", self.destination),
                                password=kwargs.get("password", self.password),
                                profile=kwargs.get("profile", self.profile),
-                               conf=kwargs.get("conf", self.conf))
+                               config=kwargs.get("conf", self.conf))
 
     def delete_older_than(self, filename=None, interval=None, **kwargs):
         """Delete backups older than the given interval string.
@@ -327,7 +327,7 @@ class BakHelper:
         return bakthat.delete_older_than(filename, interval,
                                          destination=kwargs.get("destination", self.destination),
                                          profile=kwargs.get("profile", self.profile),
-                                         conf=kwargs.get("conf", self.conf))
+                                         config=kwargs.get("conf", self.conf))
 
     def rotate(self, filename=None, **kwargs):
         """Rotate backup using grandfather-father-son rotation scheme.
@@ -353,4 +353,4 @@ class BakHelper:
         return bakthat.rotate_backups(filename,
                                       destination=kwargs.pop("destination", self.destination),
                                       profile=kwargs.get("profile", self.profile),
-                                      conf=kwargs.get("conf", self.conf))
+                                      config=kwargs.get("conf", self.conf))

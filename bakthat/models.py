@@ -12,7 +12,6 @@ log = logging.getLogger(__name__)
 
 database = peewee.SqliteDatabase(DATABASE)
 
-
 class JsonField(peewee.CharField):
     """Custom JSON field."""
     def db_value(self, value):
@@ -102,7 +101,7 @@ class Backups(SyncedModel):
         wheres = []
 
         if kwargs.get("profile"):
-            profile = conf.get(kwargs.get("profile"))
+            profile = conf.get(kwargs.get("profile", "default"))
 
             s3_key = hashlib.sha512(profile.get("access_key") +
                                     profile.get("s3_bucket")).hexdigest()

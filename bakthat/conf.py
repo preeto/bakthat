@@ -19,6 +19,8 @@ EXCLUDE_FILES = [".bakthatexclude", ".gitignore"]
 
 def load_config(config_file=CONFIG_FILE):
     """ Try to load a yaml config file. """
+    if isinstance(config_file, dict):
+        return {'default': config_file}
     config = {}
     if os.path.isfile(config_file):
         log.debug("Try loading config file: {0}".format(config_file))
