@@ -127,6 +127,7 @@ class GlacierBackend(BakthatBackend):
         con = boto.connect_glacier(aws_access_key_id=self.conf["access_key"], aws_secret_access_key=self.conf["secret_key"], region_name=self.conf["region_name"])
 
         self.vault = con.create_vault(self.conf["glacier_vault"])
+        self.vault.name = str(self.vault.name)  #  https://github.com/boto/boto/issues/3318
         self.backup_key = "bakthat_glacier_inventory"
         self.container = self.conf["glacier_vault"]
         self.container_key = "glacier_vault"
