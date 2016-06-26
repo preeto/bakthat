@@ -420,6 +420,24 @@ def configure(profile="default"):
         new_conf = config.copy()
         new_conf[profile] = config.get(profile, {})
 
+        while 1:
+            database_type = raw_input("Database type: ")
+            if database_type:
+                database_type = database_type.lower()
+                if database_type in ("mysql", "sqlite"):
+                    break
+                else:
+                    log.error("Invalid database_type, should be mysql or sqlite, try again.")
+
+        new_conf[profile]["database_type"] = database_type
+
+        if database_type == "mysql":
+            new_conf[profile]["database_host"] = raw_input("Database host: ")
+            new_conf[profile]["database_name"] = raw_input("Database name: ")
+            new_conf[profile]["database_user"] = raw_input("Database user: ")
+            new_conf[profile]["database_pass"] = raw_input("Database pass: ")
+            new_conf[profile]["database_port"] = raw_input("Database port: ")
+
         new_conf[profile]["access_key"] = raw_input("AWS Access Key: ")
         new_conf[profile]["secret_key"] = raw_input("AWS Secret Key: ")
         new_conf[profile]["s3_bucket"] = raw_input("S3 Bucket Name: ")
