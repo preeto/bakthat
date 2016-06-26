@@ -1,7 +1,10 @@
 # -*- encoding: utf-8 -*-
 import logging
-from datetime import timedelta
 import re
+import peewee
+from datetime import timedelta
+
+from bakthat.conf import config, load_config, DATABASE
 
 log = logging.getLogger(__name__)
 
@@ -53,3 +56,31 @@ def _interval_string_to_seconds(interval_string):
         else:
             raise Exception(interval_exc)
     return seconds
+
+def _get_database():
+    """Determine database in use and credentials if required."""
+    database = None
+    conf = config.get('default')
+
+    if conf.get("database_type"):
+        database_type = conf.get("database_type")
+
+        if database_type == "mysql":
+            if conf.get("database_host") and conf.get("database_name") and conf.get("database_user") and conf.get("database_pass") and conf.get("database_port"):
+                database_host = conf.get("database_host")
+                database_name = conf.get("database_name")
+                database_user = conf.get("database_user")
+                database_pass = conf.get("database_pass")
+                database_port = conf.get("database_port")
+
+                database = peewee.MySQLDatabase(database_name, host=database_host, port=database_port, user=database_user, passwd=database_pass)
+            else:
+                log.error("You must specify all config options if using mysql database.")
+
+        if database_type == 'sqlite':
+            database = peewee.SqliteDatabase(DATABASE)
+    else:
+        log.info("Defaulting to using SQLITE.")
+        database = peewee.SqliteDatabase(DATABASE)
+
+    return database
