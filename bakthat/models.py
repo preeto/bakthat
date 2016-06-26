@@ -1,15 +1,19 @@
 import peewee
-from datetime import datetime
-from bakthat.conf import config, load_config, DATABASE
 import hashlib
 import json
 import sqlite3
 import os
 import requests
 import logging
+from datetime import datetime
+
+from bakthat.conf import config, load_config, DATABASE
+from bakthat.utils import _get_database
 
 log = logging.getLogger(__name__)
 
+"""Database definition."""
+database = _get_database()
 
 class JsonField(peewee.CharField):
     """Custom JSON field."""
@@ -251,35 +255,6 @@ for table in [Backups, Jobs, Inventory, Config, History]:
         table.create_table()
 
 
-"""Determine database in use and credentials if required."""
-def get_database():
-    database = None
-    conf = config.get('default')
-
-    if conf.get("database_type"):
-        database_type = conf.get("database_type")
-
-        if database_type == "mysql":
-            if conf.get("database_host") and conf.get("database_name") and conf.get("database_user") and conf.get("database_pass") and conf.get("database_port"):
-                database_host = conf.get("database_host")
-                database_name = conf.get("database_name")
-                database_user = conf.get("database_user")
-                database_pass = conf.get("database_pass")
-                database_port = conf.get("database_port")
-
-                database = peewee.MySQLDatabase(database_name, host=database_host, port=database_port, user=database_user, passwd=database_pass)
-            else:
-                log.error("You must specify all config options if using mysql database.")
-
-        if database_type == 'sqlite':
-            database = peewee.SqliteDatabase(DATABASE)
-    else:
-        log.info("Defaulting to using SQLITE.")
-        database = peewee.SqliteDatabase(DATABASE)
-
-    return database
-
-
 def backup_sqlite(filename):
     """Backup bakthat SQLite database to file."""
     con = sqlite3.connect(DATABASE)
@@ -315,6 +290,3 @@ def switch_from_dt_to_peewee():
         os.remove(os.path.expanduser("~/.bakthat.dt"))
 
 switch_from_dt_to_peewee()
-
-"""Database definition."""
-database = get_database()
