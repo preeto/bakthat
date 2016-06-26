@@ -51,12 +51,12 @@ class Backups(SyncedModel):
     backend = peewee.CharField(index=True)
     backend_hash = peewee.CharField(index=True, null=True)
     backup_date = peewee.IntegerField(index=True)
-    filename = peewee.TextField(index=True)
+    filename = peewee.CharField(index=True)
     is_deleted = peewee.BooleanField()
     last_updated = peewee.IntegerField()
     metadata = JsonField()
     size = peewee.IntegerField()
-    stored_filename = peewee.TextField(index=True, unique=True)
+    stored_filename = peewee.CharField(index=True, unique=True)
     tags = peewee.CharField()
 
     def __repr__(self):
