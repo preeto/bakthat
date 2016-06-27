@@ -102,6 +102,14 @@ Changelog
 - Plugin architecture improved
 - Switch from aaargh to cliff for the CLI handling
 
+0.6.5
+~~~~~
+
+**June 27 2016**
+
+- Bakthat inventory information can now be stored in MySQL instead of Sqlite.
+- filename & stored_filename use CharField instead of TextField. This change is to maintain compatibility with MySQL and Sqlite.
+
 0.6.0
 ~~~~~
 
